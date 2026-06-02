@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <title>神人egg</title>
+</head>
+<body>
+<header>
+    <div class="menu">
+        <nav>
+            <label for="count">題目數量</label>
+            <select name="" id="count">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="80">80</option>
+            </select>
+            <button onclick="start()">抽題</button>
+            <button onclick="resetProgress()">清空紀錄</button>
+        </nav>
+        <div id="btn">
+        </div>
+    </div>
+</header>
+<main>
+    <div class="hero">
+    </div>
+</main>
+<footer>
+    <div class="footer">
+            <div>鍵盤1,2,3,4可以選答案，左右鍵可以換題</div>
+            <div>本網頁由林軒睦一人製作與維護若有錯誤歡迎回報</div>
+    </div>
+</footer>
+</body>
+<script>
+    let allData = [];
+    let count = 10;
+    let currentPage = 0;
+    let problems = [];
+    let word={
+        1:"A."+"&nbsp;&nbsp;",
+        2:"B."+"&nbsp;&nbsp;",
+        3:"C."+"&nbsp;&nbsp;",
+        4:"D."+"&nbsp;&nbsp;"
+    }
+    let masteredIds=JSON.parse(localStorage.getItem('masteredIds')||'[]');
+    const resetProgress=()=>{
+        if (confirm('確認清除所有以作答正確題目紀錄?')){
+            if (confirm('不是手殘?')){
+            localStorage.removeItem('masteredIds')
+            masteredIds=[];
+            alert('已重製，所以題目都會重新被抽到，包括之前所答對的');
+            }
+        }
+    }
+    const select = document.getElementById('count');
+    const btn = document.getElementById('btn');
+    select.addEventListener('change', (e) => {
+        count = e.target.value
+        problems = []
+    });
+    (async () => {
+        const res = await fetch('questions.json')
+        allData = await res.json();
+    })();
+    const start = () => {
+        currentPage = 0;
+        problems = [];
+        const labelDate=allData.filter(q=>!masteredIds.includes(q.id));
+        if (labelDate.length===0){
+            alert('我去你他媽寫了649題');
+            return
+        }
+        const shuffled = [...labelDate].sort(() => Math.random() - 0.5);
+        const countToTake=Math.min(Number(count),labelDate.length);
+        problems = shuffled.slice(0, countToTake).map(q => {
+            let optionWithStatus=q.options.map((text,idx)=>({
+                text:text,
+                isCorrect:(idx+1===q.answer)
+            }));
+            optionWithStatus.sort(()=>Math.random()-0.5);
+            return{
+                ...q,
+                userAnswer:null,
+                shuffledOptions:optionWithStatus
+            }
+        })
+        create();
+    }
+    const render=()=>{
+        const q=problems[currentPage];
+        const hero=document.querySelector('.hero');
+
+        const isImageMode=q.isImageOptions===true;
+        const optionHTML = q.shuffledOptions.map((opt, index) => {
+            const displayContent = isImageMode
+                ? `<img src="${opt.text}" style="max-width:150px; display:block;">`
+                : opt.text;
+            return `
+        <label style="display:block; margin:10px 0; border:1px solid #ddd; padding:10px;">
+            <input type="radio" name="answer" value="${index}"
+               ${q.userAnswer === index ? 'checked' : ''}
+               onchange="saveAnswer(${index})">
+            ${word[index + 1]} ${displayContent}
+        </label>`;
+        }).join('');
+        hero.innerHTML = `
+         <p>${currentPage + 1}. ${q.question}</p>
+         ${q.image_url ? `<img src="${q.image_url}" style="max-width:300px; display:block; margin-bottom:10px;">` : ''}
+         <div class="options-container">${optionHTML}</div>
+    `;
+        document.querySelector('#btn select').value=currentPage+1;
+    }
+    const saveAnswer=(index)=>{
+        problems[currentPage].userAnswer=index;
+    }
+    const create = () => {
+        btn.innerHTML = `
+        <button onclick="prev()">上一題</button>
+        <button onclick="next()">下一題</button>
+        <button onclick="submitExam()">交卷</button>
+`;
+        const select=document.createElement('select')
+        const label=document.createElement('label');
+        label.textContent='選擇題目'
+        for (let i = 1; i <= problems.length; i++) {
+            const option=document.createElement('option')
+            option.value=i;
+            option.textContent=i
+            select.appendChild(option);
+        }
+        btn.appendChild(label)
+        btn.appendChild(select)
+        select.addEventListener('change',(e)=>{
+            currentPage=e.target.value-1;
+            render()
+        })
+        render()
+    }
+        window.addEventListener('keydown',(e)=>{
+            if (problems.length===0)return;
+            if (e.key==='ArrowRight'){
+                next()
+            }else if(e.key==="ArrowLeft"){
+                prev()
+            }else if (['1','2','3','4'].includes(e.key)){
+                const index=parseInt(e.key)-1;
+                saveAnswer(index);
+                render()
+            }
+        })
+    const next=()=>{
+        if (currentPage<problems.length-1){
+            currentPage++;
+            render()
+        }
+    }
+    const prev=()=>{
+        if (currentPage>0){
+            currentPage--
+            render()
+        }
+    }
+    const submitExam=()=>{
+        if (!confirm('答完了嗎就交卷?'))return
+        let correctCount=0;
+        let newlyMastered=[];
+        problems.forEach(q=>{
+            if (q.userAnswer!==null&&q.shuffledOptions[q.userAnswer].isCorrect){
+                correctCount++;
+                if (!masteredIds.includes(q.id)){
+                    masteredIds.push(q.id);
+                    newlyMastered.push(q.id);
+                }
+            }
+        })
+        localStorage.setItem('masteredIds',JSON.stringify(masteredIds))
+        const hero=document.querySelector('.hero');
+        let reviewHTML=`
+        <div class="result-page">
+            <h2>測驗結果：${correctCount} / ${problems.length} 題</h2>
+            <hr>
+        `
+        problems.forEach((q,qIndex)=>{
+            const optionsHTML=q.shuffledOptions.map((opt,optIndex)=>{
+                let style='';
+                if (opt.isCorrect)style='background-color: #d4edda; color: #155724; font-weight: bold;'
+                else if (q.userAnswer===optIndex)style='background-color: #f8d7da; color: #721c24;'
+
+                return `<div style="padding: 5px; margin: 2px; ${style}">
+                ${word[optIndex + 1]}. ${opt.text}
+                ${opt.isCorrect ? '(正確答案)' : ''}
+            </div>`;
+            }).join('');
+            reviewHTML += `
+            <div class="review-item" style="margin-bottom: 20px; border: 1px solid #ccc; padding: 10px;">
+                <p><strong>${qIndex + 1}. ${q.question}</strong></p>
+                ${q.image_url ? `<img src="${q.image_url}" style="max-width:200px;">` : ''}
+                <div>${optionsHTML}</div>
+            </div>
+        `;
+        });
+        reviewHTML+=`</div>`
+        hero.innerHTML=reviewHTML;
+        btn.innerHTML='';
+    }
+</script>
+</html>

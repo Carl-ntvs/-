@@ -186,13 +186,16 @@
             <hr>
         `
         problems.forEach((q,qIndex)=>{
+            const isImageMode = q.isImageOptions === true;
             const optionsHTML=q.shuffledOptions.map((opt,optIndex)=>{
                 let style='';
                 if (opt.isCorrect)style='background-color: #d4edda; color: #155724; font-weight: bold;'
                 else if (q.userAnswer===optIndex)style='background-color: #f8d7da; color: #721c24;'
-
+                const displayContent = isImageMode
+                    ? `<img src="${opt.text}" style="max-width:150px; display:block;">`
+                    : opt.text;
                 return `<div style="padding: 5px; margin: 2px; ${style}">
-                ${word[optIndex + 1]}. ${opt.text}
+                ${word[optIndex + 1]}. ${displayContent}
                 ${opt.isCorrect ? '(正確答案)' : ''}
             </div>`;
             }).join('');

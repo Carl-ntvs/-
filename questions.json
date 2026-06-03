@@ -15,12 +15,11 @@
     "id": 2,
     "answer": 1,
     "question": "下列電阻器之標註何者為正確",
-    "image_url":"images/q2.png",
     "options": [
-      "R 5",
-      "5 R",
-      "R 5",
-      "5 R"
+      "R₅",
+      "5ᵣ",
+      "R⁵",
+      "5ᴿ"
     ]
   },
   {

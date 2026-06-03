@@ -2518,10 +2518,10 @@
     "answer": 4,
     "question": "測定電熱器 (H) 之消耗電力時，電壓表 (V) 及電流表 (A) 之正確接線為：",
     "options": [
-      "images/225-1.png",
-      "images/225-2.png",
-      "images/225-3.png",
-      "images/225-4.png"
+      "images/q225-1.png",
+      "images/q225-2.png",
+      "images/q225-3.png",
+      "images/q225-4.png"
     ],
     "isImageOptions": true
   },
@@ -3530,10 +3530,10 @@
     "answer": 4,
     "question": "兩電感串聯考慮互感時總電量為",
     "options": [
-      "images/316-1.png",
-      "images/316-2.png",
-      "images/316-3.png",
-      "images/316-4.png"
+      "images/q316-1.png",
+      "images/q316-2.png",
+      "images/q316-3.png",
+      "images/q316-4.png"
     ],
     "isImageOptions": true
   },
@@ -7234,7 +7234,7 @@
     "id": 646,
     "answer": 4,
     "question": "如圖電路，若 A = B = C =1 ，則輸出為",
-    "image_url": "iamges/q646.png",
+    "image_url": "images/q646.png",
     "options": [
       "X =0 ， Y =0",
       "X =1 ， Y =0",
@@ -7268,7 +7268,7 @@
     "id": 649,
     "answer": 4,
     "question": "如圖所示，此電路一般可用來做",
-    "image_url": "iamges/q649.png",
+    "image_url": "images/q649.png",
     "options": [
       "振盪器用",
       "電流放大電路用",

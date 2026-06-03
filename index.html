@@ -26,6 +26,7 @@
     </div>
 </header>
 <main>
+            <div id="progress"></div>
     <div class="hero">
     </div>
 </main>
@@ -48,12 +49,23 @@
         4:"D."+"&nbsp;&nbsp;"
     }
     let masteredIds=JSON.parse(localStorage.getItem('masteredIds')||'[]');
+
+    const updateProgress = () => {
+        const total = allData.length;
+        const masteredCount = masteredIds.length;
+        const progressDiv = document.getElementById('progress');
+        if (total > 0) {
+            const percentage = ((masteredCount / total) * 100).toFixed(1);
+            progressDiv.innerHTML = `已答對過: ${masteredCount}題 / ${total} (${percentage}%)`;
+        }
+    };
     const resetProgress=()=>{
         if (confirm('確認清除所有以作答正確題目紀錄?')){
             if (confirm('不是手殘?')){
             localStorage.removeItem('masteredIds')
             masteredIds=[];
             alert('已重製，所以題目都會重新被抽到，包括之前所答對的');
+            updateProgress()
             }
         }
     }
@@ -66,8 +78,11 @@
     (async () => {
         const res = await fetch('questions.json')
         allData = await res.json();
+        updateProgress();
     })();
     const start = () => {
+        masteredIds = JSON.parse(localStorage.getItem('masteredIds') || '[]');
+
         currentPage = 0;
         problems = [];
         const labelDate=allData.filter(q=>!masteredIds.includes(q.id));
@@ -179,6 +194,7 @@
             }
         })
         localStorage.setItem('masteredIds',JSON.stringify(masteredIds))
+        updateProgress()
         const hero=document.querySelector('.hero');
         let reviewHTML=`
         <div class="result-page">

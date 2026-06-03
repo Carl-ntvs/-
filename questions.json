@@ -108,10 +108,10 @@
     "answer": 3,
     "question": "下列何者為電動機的符號",
     "options": [
-      "images/q10-1.pen",
-      "images/q10-2.pen",
-      "images/q10-3.pen",
-      "images/q10-4.pen"
+      "images/q10-1.png",
+      "images/q10-2.png",
+      "images/q10-3.png",
+      "images/q10-4.png"
     ],
     "isImageOptions": true
   },
@@ -593,7 +593,7 @@
     "id": 51,
     "answer": 1,
     "question": "下列符號是哪一種零件的符號？",
-    "image_url": "images/q51.png",
+    "image_url": "images/q51.jpg",
     "options": [
       "共陰極七段顯示器",
       "共陽極七段顯示 器",

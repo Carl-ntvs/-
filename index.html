@@ -57,7 +57,7 @@
         const progressDiv = document.getElementById('progress');
         if (total > 0) {
             const percentage = ((masteredCount / total) * 100).toFixed(1);
-            progressDiv.innerHTML = `已答對過: ${masteredCount}題 / ${total} (${percentage}%)`;
+                        progressDiv.innerHTML = `已答對過: ${masteredCount}題 / ${total} (${percentage}%)<span style="color: transparent;cursor: default">這是一個神人彩蛋，望周知網頁是最簡單的競賽</span>`;
         }
     };
     const resetProgress=()=>{

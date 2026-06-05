@@ -6595,8 +6595,8 @@
     "question": "下圖所示， W 為",
     "image_url":"images/q589.png",
     "options": [
-      "X&#x0305;Y&#x0305;+XY",
-      "X&#x0305;Y+XY&#x0305;",
+      "<span style='text-decoration: overline;'>XY</span>+XY",
+      "<span style='text-decoration: overline;'>X</span>Y+X<span style='text-decoration: overline;'>Y</span>",
       "XY ＋ XY",
       "X ＋ Y"
     ]
@@ -6782,7 +6782,7 @@
       "0",
       "1",
       "A",
-      "A&#x0305;"
+      "<span style='text-decoration: overline;'>A</span>"
     ]
   },
   {
@@ -6803,9 +6803,9 @@
     "question": "下圖的邏輯電路其布林代數表示為",
     "image_url": "images/q607.png",
     "options": [
-      "Y=AB+A&#x0305;B",
-      "Y=A&#x0305;B+AB&#x0305;",
-      "Y=AB+A&#x0305;B&#x0305;",
+      "Y=AB+<span style='text-decoration: overline;'>A</span>B",
+      "Y=<span style='text-decoration: overline;'>A</span>B+A<span style='text-decoration: overline;'>B</span>",
+      "Y=AB+<span style='text-decoration: overline;'>AB</span>",
       "Y ＝ A ⊕ B"
     ]
   },
@@ -6823,12 +6823,12 @@
   {
     "id": 609,
     "answer": 2,
-    "question": "在 J.K 正反器中， J ＝ 0 、 K ＝ 1 時，當 CLOCK （時脈）信號激發後，其輸 出 Q 與 Q&#x0305;為",
+    "question": "在 J.K 正反器中， J ＝ 0 、 K ＝ 1 時，當 CLOCK （時脈）信號激發後，其輸 出 Q 與 <span style='text-decoration: overline;'>Q</span>為",
     "options": [
-      "Q ＝ 1 ， Q&#x0305;＝ 1",
-      "Q ＝ 0 ， Q&#x0305;＝ 1",
-      "Q ＝ 0 ， Q&#x0305;＝ 0",
-      "Q ＝ 1 ， Q&#x0305;＝ 0"
+      "Q ＝ 1 ， <span style='text-decoration: overline;'>Q</span>＝ 1",
+      "Q ＝ 0 ， <span style='text-decoration: overline;'>Q</span>＝ 1",
+      "Q ＝ 0 ， <span style='text-decoration: overline;'>Q</span>＝ 0",
+      "Q ＝ 1 ， <span style='text-decoration: overline;'>Q</span>＝ 0"
     ]
   },
   {
@@ -6873,8 +6873,8 @@
     "options": [
       "Y ＝ A ‧ B",
       "Y ＝ A+B",
-      "Y=A&#x0305;B&#x0305;",
-      "Y=A&#x0305;+&#x0305;B&#x0305;"
+      "Y=<span style='text-decoration: overline;'>AB</span>",
+      "Y=<span style='text-decoration: overline;'>A+B</span>"
     ]
   },
   {
@@ -6884,8 +6884,8 @@
     "options": [
       "B+C",
       "A +B",
-      "BC+C&#x0305;",
-      "B+C&#x0305;"
+      "BC+<span style='text-decoration: overline;'>C</span>",
+      "B+<span style='text-decoration: overline;'>C</span>"
     ]
   },
   {
@@ -7210,7 +7210,7 @@
   {
     "id": 644,
     "answer": 1,
-    "question": "如圖所示， y ＝A&#x0305; 之輸入條件為",
+    "question": "如圖所示， y ＝<span style='text-decoration: overline;'>A</span> 之輸入條件為",
     "image_url": "images/q644.png",
     "options": [
       "I 0 I 1 =00",
@@ -7222,7 +7222,7 @@
   {
     "id": 645,
     "answer": 2,
-    "question": "有一 J - K 正反器，在不考慮控制輸入下，欲使其輸出為反態現象 ( Q&#x0305; n&#x0305;; + 1 = ) ，則 J 、 K 之輸入為何？",
+    "question": "有一 J - K 正反器，在不考慮控制輸入下，欲使其輸出為反態現象 (Q<sub>n+1</sub>=<span style='text-decoration: overline;'>Q<sub>n</sub></span>) ，則 J 、 K 之輸入為何？",
     "options": [
       "J =1 ， K =0",
       "J =1 ， K =1",

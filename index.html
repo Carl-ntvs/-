@@ -302,68 +302,6 @@
     // 使用 html-docx-js 將 HTML 轉換為 docx Blob 檔
     const converted = htmlDocx.asBlob(htmlContent);
     saveAs(converted, `測驗結果報告_${new Date().toISOString().slice(0,10)}.docx`);
-};const exportToDocx = () => {
-    let htmlContent = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <style>
-                body { font-family: 'Microsoft JhengHei', sans-serif; line-height: 1.6; }
-                h2 { color: #333; }
-                .review-item { border-bottom: 1px solid #ccc; padding-bottom: 15px; margin-bottom: 15px; }
-                .correct { color: #155724; font-weight: bold; }
-                .user-ans { color: #0056b3; }
-                .option { margin-left: 10px; }
-            </style>
-        </head>
-        <body>
-            <h2>測驗結果報告</h2>
-            <p><strong>總題數：</strong>${problems.length} 題</p>
-            <hr>
-    `;
-
-    problems.forEach((q, qIndex) => {
-        const isImageMode = q.isImageOptions === true;
-        
-        // 取得使用者答案與正確答案
-        let userAnsText = "未作答";
-        let correctAnsText = "";
-
-        q.shuffledOptions.forEach((opt, optIdx) => {
-            const letter = word[optIdx + 1].replace(/&nbsp;/g, '').trim();
-            const text = isImageMode ? '[圖片選項]' : opt.text;
-
-            if (q.userAnswer === optIdx) {
-                userAnsText = `${letter} ${text}`;
-            }
-            if (opt.isCorrect) {
-                correctAnsText = `${letter} ${text}`;
-            }
-        });
-
-        // 整理選項文字
-        const optionsList = q.shuffledOptions.map((opt, optIdx) => {
-            const letter = word[optIdx + 1].replace(/&nbsp;/g, '').trim();
-            const text = isImageMode ? '[圖片選項]' : opt.text;
-            return `<div class="option">${letter} ${text} ${opt.isCorrect ? '(正確答案)' : ''}</div>`;
-        }).join('');
-
-        htmlContent += `
-            <div class="review-item">
-                <p><strong>${qIndex + 1}. ${q.question}</strong></p>
-                <div><strong>選項：</strong>${optionsList}</div>
-                <p class="correct"><strong>正確答案：</strong>${correctAnsText}</p>
-                <p class="user-ans"><strong>使用者答案：</strong>${userAnsText}</p>
-            </div>
-        `;
-    });
-
-    htmlContent += `</body></html>`;
-
-    // 使用 html-docx-js 將 HTML 轉換為 docx Blob 檔
-    const converted = htmlDocx.asBlob(htmlContent);
-    saveAs(converted, `測驗結果報告_${new Date().toISOString().slice(0,10)}.docx`);
 };
 </script>
 </html>

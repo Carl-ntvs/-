@@ -240,68 +240,95 @@
         btn.innerHTML='';
         exportToDocx()
     }
-    const exportToDocx = () => {
+    const getBase64Image = async (imgUrl) => {
+    try {
+        const response = await fetch(imgUrl);
+        const blob = await response.blob();
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = () => resolve(null);
+            reader.readAsDataURL(blob);
+        });
+    } catch (e) {
+        console.error("圖片轉檔失敗:", imgUrl, e);
+        return null;
+    }
+};
+    const exportToDocx = async () => {
     let htmlContent = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <style>
-                body { font-family: 'Microsoft JhengHei', sans-serif; line-height: 1.6; }
-                h2 { color: #333; }
-                .review-item { border-bottom: 1px solid #ccc; padding-bottom: 15px; margin-bottom: 15px; }
-                .correct { color: #155724; font-weight: bold; }
-                .user-ans { color: #0056b3; }
-                .option { margin-left: 10px; }
-            </style>
-        </head>
-        <body>
-            <h2>測驗結果報告</h2>
-            <p><strong>總題數：</strong>${problems.length} 題</p>
-            <hr>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <style>
+            body { font-family: 'Microsoft JhengHei', sans-serif; line-height: 1.6; }
+            h2 { color: #333; }
+            .review-item { border-bottom: 1px solid #ccc; padding-bottom: 15px; margin-bottom: 15px; }
+            .correct { color: #155724; font-weight: bold; }
+            .user-ans { color: #0056b3; }
+            .option { margin-left: 10px; margin-top: 5px; }
+            img { max-width: 200px; height: auto; display: block; margin: 5px 0; }
+        </style>
+    </head>
+    <body>
+        <h2>測驗結果報告</h2>
+        <p><strong>總題數：</strong>${problems.length} 題</p>
+        <hr>
     `;
 
-    problems.forEach((q, qIndex) => {
+    for (let qIndex = 0; qIndex < problems.length; qIndex++) {
+        const q = problems[qIndex];
         const isImageMode = q.isImageOptions === true;
         
-        // 取得使用者答案與正確答案
+        let questionImgTag = '';
+        if (q.image_url) {
+            const qImgBase64 = await getBase64Image(q.image_url);
+            if (qImgBase64) {
+                questionImgTag = `<br><img src="${qImgBase64}">`;
+            }
+        }
+
         let userAnsText = "未作答";
         let correctAnsText = "";
 
-        q.shuffledOptions.forEach((opt, optIdx) => {
+        // 處理所有選項
+        let optionsListHTML = '';
+        for (let optIdx = 0; optIdx < q.shuffledOptions.length; optIdx++) {
+            const opt = q.shuffledOptions[optIdx];
             const letter = word[optIdx + 1].replace(/&nbsp;/g, '').trim();
-            const text = isImageMode ? '[圖片選項]' : opt.text;
+            
+            let optDisplay = opt.text;
+            if (isImageMode) {
+                const optImgBase64 = await getBase64Image(opt.text);
+                optDisplay = optImgBase64 ? `<br><img src="${optImgBase64}">` : '[圖片載入失敗]';
+            }
 
             if (q.userAnswer === optIdx) {
-                userAnsText = `${letter} ${text}`;
+                userAnsText = `${letter} ${optDisplay}`;
             }
             if (opt.isCorrect) {
-                correctAnsText = `${letter} ${text}`;
+                correctAnsText = `${letter} ${optDisplay}`;
             }
-        });
 
-        // 整理選項文字
-        const optionsList = q.shuffledOptions.map((opt, optIdx) => {
-            const letter = word[optIdx + 1].replace(/&nbsp;/g, '').trim();
-            const text = isImageMode ? '[圖片選項]' : opt.text;
-            return `<div class="option">${letter} ${text} ${opt.isCorrect ? '(正確答案)' : ''}</div>`;
-        }).join('');
+            optionsListHTML += `<div class="option">${letter} ${optDisplay} ${opt.isCorrect ? '(正確答案)' : ''}</div>`;
+        }
 
         htmlContent += `
             <div class="review-item">
-                <p><strong>${qIndex + 1}. ${q.question}</strong></p>
-                <div><strong>選項：</strong>${optionsList}</div>
+                <p><strong>${qIndex + 1}. ${q.question}</strong>${questionImgTag}</p>
+                <div><strong>選項：</strong>${optionsListHTML}</div>
                 <p class="correct"><strong>正確答案：</strong>${correctAnsText}</p>
                 <p class="user-ans"><strong>使用者答案：</strong>${userAnsText}</p>
             </div>
         `;
-    });
+    }
 
     htmlContent += `</body></html>`;
 
-    // 使用 html-docx-js 將 HTML 轉換為 docx Blob 檔
+    // 轉成 docx 並下載
     const converted = htmlDocx.asBlob(htmlContent);
-    saveAs(converted, `測驗結果報告_${new Date().toISOString().slice(0,10)}.docx`);
+    saveAs(converted, `測驗結果報告_${new Date().toISOString().slice(0, 10)}.docx`);
 };
 </script>
 </html>

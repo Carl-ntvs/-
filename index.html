@@ -203,6 +203,15 @@
         `
         problems.forEach((q,qIndex)=>{
             const isImageMode = q.isImageOptions === true;
+            let userSelectedText = "未作答";
+            if (q.userAnswer !== null) {
+                const selectedOpt = q.shuffledOptions[q.userAnswer];
+                const optionLetter = word[q.userAnswer + 1].replace(/&nbsp;/g, '').trim(); // 取得 A./B./C./D.
+                const content = isImageMode 
+                    ? `<img src="${selectedOpt.text}" style="max-width:100px; display:inline-block; vertical-align:middle;">` 
+                    : selectedOpt.text;
+                userSelectedText = `${optionLetter} ${content}`;
+            }
             const optionsHTML=q.shuffledOptions.map((opt,optIndex)=>{
                 let style='';
                 if (opt.isCorrect)style='background-color: #d4edda; color: #155724; font-weight: bold;'
@@ -219,6 +228,7 @@
             <div class="review-item" style="margin-bottom: 20px; border: 1px solid #ccc; padding: 10px;">
                 <p><strong>${qIndex + 1}. ${q.question}</strong></p>
                 ${q.image_url ? `<img src="${q.image_url}" style="max-width:200px;">` : ''}
+                <p style="margin: 8px 0; font-size: 15px;"><strong>你的答案：</strong> ${userSelectedText}</p>
                 <div>${optionsHTML}</div>
             </div>
         `;
